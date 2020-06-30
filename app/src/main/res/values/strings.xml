@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NASA APOD</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="no_internet_connection">Please check your internet connection</string>
+    <string name="limit_exceeded">Unable to get response. API call limit exceeded</string>
+    <string name="buffering_video">Buffering video please wait...</string>
+</resources>
