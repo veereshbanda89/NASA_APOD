@@ -34,7 +34,8 @@ public class HomeActivity extends AppCompatActivity implements ApiFailureListene
     private DatePicker datePicker;
     private ImageView calendar;
     private TextView title;
-    private ImageView imageOrVideoView;
+    private ImageView imageView;
+    private ImageView videoView;
     private TextView description;
     private ImageView zoomPhoto;
     private ImageView playVideo;
@@ -48,7 +49,8 @@ public class HomeActivity extends AppCompatActivity implements ApiFailureListene
         title = findViewById(R.id.title);
         calendar = findViewById(R.id.calendar);
         datePicker = findViewById(R.id.datePicker);
-        imageOrVideoView = findViewById(R.id.imageOrVideoView);
+        imageView = findViewById(R.id.imageView);
+        videoView = findViewById(R.id.videoView);
         description = findViewById(R.id.description);
         zoomPhoto = findViewById(R.id.zoomPhoto);
         playVideo = findViewById(R.id.playVideo);
@@ -62,13 +64,13 @@ public class HomeActivity extends AppCompatActivity implements ApiFailureListene
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                imageOrVideoView.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                videoView.setVisibility(View.GONE);
                 datePicker.setVisibility(View.VISIBLE);
                 datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
                     @Override
                     public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
                         datePicker.setVisibility(View.GONE);
-                        imageOrVideoView.setVisibility(View.VISIBLE);
                         callApi(getDateChanged());
                     }
                 });
@@ -103,7 +105,10 @@ public class HomeActivity extends AppCompatActivity implements ApiFailureListene
         description.setText(apodResponse.getExplanation());
         if(apodResponse.getMediaType().equals("image")){
             zoomPhoto.setVisibility(View.VISIBLE);
-            Glide.with(getApplicationContext()).load(apodResponse.getHdurl()).into(imageOrVideoView);
+            playVideo.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.GONE);
+            Glide.with(getApplicationContext()).load(apodResponse.getHdurl()).into(imageView);
             zoomPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -115,11 +120,14 @@ public class HomeActivity extends AppCompatActivity implements ApiFailureListene
             });
         }else{
             playVideo.setVisibility(View.VISIBLE);
+            zoomPhoto.setVisibility(View.GONE);
+            videoView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
             playVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(),ViewPhotoOrVideo.class);
-                    intent.putExtra("VIDEO", apodResponse.getHdurl());
+                    intent.putExtra("VIDEO", apodResponse.getUrl());
                     intent.putExtra("MEDIA_TYPE",apodResponse.getMediaType());
                     startActivity(intent);
                 }
